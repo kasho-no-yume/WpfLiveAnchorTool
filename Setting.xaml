@@ -1,0 +1,33 @@
+﻿<Window
+    x:Class="WpfLiveAnchorTool.Setting"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WpfLiveAnchorTool"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wpfx1="http://schemas.xceed.com/wpf/xaml/toolkit"
+    Title="设置"
+    Width="400"
+    Height="300"
+    mc:Ignorable="d">
+    <StackPanel>
+        <TextBlock Margin="5,5,5,5" Text="设置底板的颜色和透明度：" />
+        <wpfx1:ColorPicker
+            x:Name="picker1"
+            Margin="5,5,5,5"
+            ColorMode="ColorCanvas"
+            ShowTabHeaders="False" />
+        <TextBlock Margin="5,5,5,5" Text="设置文字的颜色：" />
+        <wpfx1:ColorPicker
+            x:Name="picker2"
+            Margin="5,5,5,5"
+            ShowTabHeaders="False" />
+        <TextBlock Margin="5,5,5,5" Text="是否要保持视窗永远置顶" />
+        <CheckBox x:Name="alwaysTop" Margin="5,5,5,5" />
+        <Button
+            x:Name="save"
+            HorizontalAlignment="Center"
+            Click="Save"
+            Content="保存" />
+    </StackPanel>
+</Window>
