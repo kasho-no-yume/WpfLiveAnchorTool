@@ -7,8 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="mainWindow"
     Title="MainWindow"
-    Width="400"
+    Width="355"
     Height="450"
+    AllowsTransparency="True"
     Deactivated="Window_Deactivated"
     ResizeMode="NoResize"
     WindowStyle="None"
@@ -34,24 +35,33 @@
     <StackPanel>
         <StackPanel Margin="10,5,10,10" Orientation="Horizontal">
             <Button
-                Width="100"
+                Width="60"
                 Height="auto"
                 Margin="5,0,5,0"
                 Background="Transparent"
                 Click="Exit"
                 Content="退出" />
             <Button
-                Width="100"
+                x:Name="btnSetting"
+                Width="60"
                 Height="auto"
                 Margin="5,0,5,0"
                 Background="Transparent"
                 Click="Setting"
                 Content="设置" />
+            <Button
+                x:Name="btnTransparent"
+                Width="60"
+                Height="auto"
+                Margin="5,0,5,0"
+                Background="Transparent"
+                Click="clickTransparent"
+                Content="穿透" />
             <TextBlock
                 x:Name="watching"
                 Margin="20,0,0,0"
                 VerticalAlignment="Center"
-                Text="正在观看人数：" />
+                Text="正在观看人数：0" />
         </StackPanel>
         <TextBlock
             x:Name="inout"
