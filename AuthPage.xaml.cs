@@ -26,6 +26,9 @@ namespace WpfLiveAnchorTool
         {
             InitializeComponent();
             EventBus.succAuthAnchor += succAuthAnchor;
+            txtPath.ItemsSource = CustomInput.paths;
+            txtIntroduction.ItemsSource = CustomInput.descs;
+            txtTitle.ItemsSource = CustomInput.titles;
         }
         private void btnUpload_Click(object sender, RoutedEventArgs e)
         {
@@ -52,7 +55,9 @@ namespace WpfLiveAnchorTool
             string path = txtPath.Text;
             string title = txtTitle.Text;
             string introduction = txtIntroduction.Text;
-
+            CustomInput.SaveDesc(introduction);
+            CustomInput.SaveTitle(title);
+            CustomInput.SavePath(path);
             if(path == null)
             {
                 new Alert("错误！", "路径不能为空！").ShowDialog();

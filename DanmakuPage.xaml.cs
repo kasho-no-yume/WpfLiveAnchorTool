@@ -30,6 +30,7 @@ namespace WpfLiveAnchorTool
 
         const int WS_EX_TRANSPARENT = 0x00000020;
         const int GWL_EXSTYLE = (-20);
+        const int WS_EX_LAYERED = 0x00080000;
 
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -46,7 +47,28 @@ namespace WpfLiveAnchorTool
         public static void SetWindowExNotTransparent(IntPtr hwnd)
         {
             var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            SetWindowLong(hwnd, GWL_EXSTYLE, 0);
+            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle & ~WS_EX_TRANSPARENT);
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            SetWindowAboveFullscreen(true);
+            mainWindow.Topmost = alwaysTop;
+        }
+
+        public void SetWindowAboveFullscreen(bool alwaysTop)
+        {
+            IntPtr hWnd = new WindowInteropHelper(this).Handle;
+            // 设置窗口样式为 WS_EX_LAYERED
+            if(alwaysTop)
+            {
+                SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+            }
+            else
+            {
+                SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) & ~WS_EX_LAYERED);
+            }
         }
 
         public void MakeWindowTransparent(bool yes)
@@ -68,8 +90,7 @@ namespace WpfLiveAnchorTool
             InitializeComponent();
             alwaysTop = GlobalSetting.alwaysTop;
             inout.Foreground = GlobalSetting.Text;
-            watching.Foreground = GlobalSetting.Text;
-            mainWindow.Topmost = alwaysTop;
+            watching.Foreground = GlobalSetting.Text;            
             EventBus.updateComments += UpdateComments;
             EventBus.quitRoom += SomebodyQuit;
             EventBus.enterRoom += SomebodyEnter;
@@ -92,7 +113,7 @@ namespace WpfLiveAnchorTool
             {
                 Window window = (Window)sender;
                 window.Topmost = true;
-            }                    
+            }                
         }
         private void Exit(object sender, EventArgs e)
         {
@@ -141,7 +162,9 @@ namespace WpfLiveAnchorTool
             }
             inout.Foreground = GlobalSetting.Text;
             watching.Foreground = GlobalSetting.Text;
+            alwaysTop = GlobalSetting.alwaysTop;
             mainWindow.Topmost = GlobalSetting.alwaysTop;
+            //SetWindowAlwaysTop(GlobalSetting.alwaysTop);
         }
         private void Setting(object sender, RoutedEventArgs e)
         {
