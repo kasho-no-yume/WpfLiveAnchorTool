@@ -11,14 +11,17 @@ namespace WpfLiveAnchorTool
         public static List<string> paths = new List<string>();
         public static List<string> titles = new List<string>();
         public static List<string> descs = new List<string>();
+        public static List<string> urls = new List<string>();
         static CustomInput()
         {
             var customPaths = DataSaver.ReadTextFile("paths.txt");
             var customTitles = DataSaver.ReadTextFile("titles.txt");
             var customDescs = DataSaver.ReadTextFile("descs.txt");
+            var customUrl = DataSaver.ReadTextFile("urls.txt");
             paths = customPaths.Split("%%%%%%").ToList();
             titles = customTitles.Split("%%%%%%").ToList();
             descs = customDescs.Split("%%%%%%").ToList();
+            urls = customUrl.Split("%%%%%%").ToList();
         }
         private static void SaveListTo(string file,List<string> list)
         {
@@ -54,6 +57,13 @@ namespace WpfLiveAnchorTool
             descs.Remove(desc);
             descs.Insert(0, desc);
             SaveListTo("descs.txt", descs);
+        }
+        public static void SaveUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url)) return;
+            urls.Remove(url);
+            urls.Insert(0, url);
+            SaveListTo("urls.txt", urls);
         }
     }
 }

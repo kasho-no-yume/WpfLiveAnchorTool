@@ -15,11 +15,16 @@ namespace WpfLiveAnchorTool
         {
 
         }
-        public static void Send(string content)
+        public static bool Send(string content)
         {
             if (WebSocketMgr.Connect())
             {
                 var res = WebSocketMgr.SendAsync(content).Result;
+                return res;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -46,7 +51,14 @@ namespace WpfLiveAnchorTool
         public static void SendAuthAnchor(LiveRoomIntro intro)
         {
             string job = JsonConvert.SerializeObject(intro);
-            Send("authAnchor "+job);
+            if(Send("authAnchor "+job))
+            {
+
+            }
+            else
+            {
+                EventBus.failAuthAnchor();
+            }
         }
     }
 }

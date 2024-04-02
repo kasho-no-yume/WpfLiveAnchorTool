@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace WpfLiveAnchorTool
     {
         private static ClientWebSocket _webSocket;
         private static CancellationTokenSource _cancellationTokenSource;
+        public static string Url = "ws://mc.jsm.asia:8889";
         private static int TimeOut = 2;
         public static WebSocketState connState { get { return _webSocket.State; } }
 
@@ -39,7 +41,11 @@ namespace WpfLiveAnchorTool
                 _webSocket = new ClientWebSocket();
             }           
             _cancellationTokenSource = new CancellationTokenSource();
-            var responseTask = _webSocket.ConnectAsync(new Uri("ws://mc.jsm.asia:8889"), CancellationToken.None);
+            if(!Uri.IsWellFormedUriString(Url, UriKind.Absolute))
+            {
+                return false;
+            }
+            var responseTask = _webSocket.ConnectAsync(new Uri(Url), CancellationToken.None);
             Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(TimeOut));
 
             Task completedTask = Task.WhenAny(responseTask, timeoutTask).Result;

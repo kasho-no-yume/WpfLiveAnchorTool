@@ -28,6 +28,8 @@ namespace WpfLiveAnchorTool
         public static Reconnect reconnect;
         public delegate void SuccAuthAnchor();
         public static SuccAuthAnchor succAuthAnchor;
+        public delegate void FailAuthAnchor();
+        public static FailAuthAnchor failAuthAnchor;
        
         static EventBus()
         {
@@ -39,6 +41,7 @@ namespace WpfLiveAnchorTool
             disconnect += defaultDisconnect;
             reconnect += defaultReconnect;
             succAuthAnchor += defaultAuthAnchor;
+            failAuthAnchor += defaultFailAuth;
         }
         public static void GlobalEventHandler(string json)
         {
@@ -108,6 +111,11 @@ namespace WpfLiveAnchorTool
         private static void defaultAuthAnchor()
         {
             Debug.WriteLine("EventBusAuthAnchorSuccess!");
+        }
+
+        private static void defaultFailAuth()
+        {
+            Debug.WriteLine("EventBusFailAuthAnchor!");
         }
     }
 }

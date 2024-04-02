@@ -26,6 +26,7 @@ namespace WpfLiveAnchorTool
         {
             InitializeComponent();
             EventBus.succAuthAnchor += succAuthAnchor;
+            EventBus.failAuthAnchor += connectFailed;
             txtPath.ItemsSource = CustomInput.paths;
             txtIntroduction.ItemsSource = CustomInput.descs;
             txtTitle.ItemsSource = CustomInput.titles;
@@ -42,9 +43,16 @@ namespace WpfLiveAnchorTool
             }
         }
 
+        private void connectFailed()
+        {
+            new Alert("错误！","连接失败。。").ShowDialog();
+        }
+
         private void succAuthAnchor()
         {
+            CustomInput.SaveUrl(txtServerUrl.Text);
             EventBus.succAuthAnchor -= succAuthAnchor;
+            EventBus.failAuthAnchor -= connectFailed;
             var win = new DanmakuPage(txtPath.Text);
             win.Show();
             this.Close();
@@ -57,7 +65,7 @@ namespace WpfLiveAnchorTool
             string introduction = txtIntroduction.Text;
             CustomInput.SaveDesc(introduction);
             CustomInput.SaveTitle(title);
-            CustomInput.SavePath(path);
+            CustomInput.SavePath(path);           
             if(path == null)
             {
                 new Alert("错误！", "路径不能为空！").ShowDialog();
@@ -68,6 +76,12 @@ namespace WpfLiveAnchorTool
                 new Alert("错误！", "路径不能为空！").ShowDialog();
                 return;
             }
+            if(txtServerUrl.Text.Trim().Length == 0)
+            {
+                new Alert("错误！", "服务器地址不能为空！").ShowDialog();
+                return;
+            }
+            WebSocketMgr.Url = txtServerUrl.Text;
             MsgSender.SendAuthAnchor(new LiveRoomIntro(path, title, introduction));          
         }
     }
