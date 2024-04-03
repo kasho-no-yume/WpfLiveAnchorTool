@@ -41,25 +41,24 @@ namespace WpfLiveAnchorTool
                 _webSocket = new ClientWebSocket();
             }           
             _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(TimeOut));
             if(!Uri.IsWellFormedUriString(Url, UriKind.Absolute))
             {
                 return false;
             }
-            var responseTask = _webSocket.ConnectAsync(new Uri(Url), CancellationToken.None);
-            Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(TimeOut));
-
-            Task completedTask = Task.WhenAny(responseTask, timeoutTask).Result;
-
-            if (completedTask == responseTask)
+            try
             {
+                _webSocket.ConnectAsync(new Uri(Url), _cancellationTokenSource.Token).Wait();
                 ReceiveLoop();
                 ListenConnectionStatus();
-                Debug.WriteLine("连接成功！");               
+                Debug.WriteLine("连接成功！");
                 return true;
             }
-            else
+            catch(Exception ex)
             {
                 Debug.WriteLine("连接失败。");
+                _webSocket?.Dispose();
+                _webSocket = new ClientWebSocket();
                 return false;
             }
         }
